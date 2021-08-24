@@ -1,17 +1,45 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import ReactDom from 'react-dom'
+import './index.css'
+import './assets/css/icons.css'
+import Header from './components/header/header'
+import Sidebar from './components/sidebar/sidebar'
+import styled from 'styled-components'
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import routes from './routes'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const Wrapper = styled.div`
+   width: 100%;
+   display: flex;
+`
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const Index = () => {
+    return(
+        <>
+           <Header title="Admin Panel" name="Geghair"/>
+           <Wrapper>
+              <Router>
+                 <Sidebar/>
+                 <Switch>
+                    {routes.map(({containerPath,name,path})=>{
+                       return(
+                          <Route key={name} exact path={path}>
+                             {
+                               props => {
+                                  let Container = require(`${containerPath}`).default
+                                  return(
+                                     <Container {...props}/>
+                                  )
+                               }
+                              } 
+                          </Route>
+                       )
+                    })}
+                 </Switch>
+              </Router>
+              
+           </Wrapper>
+        </>
+    )
+}
+
+ReactDom.render(<Index/>,document.querySelector("#root"))
