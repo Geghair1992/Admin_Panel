@@ -1,5 +1,8 @@
 import Button from '../button/button'
 import styled from 'styled-components'
+import Loading from '../loading/loading'
+import { Link } from 'react-router-dom'
+
 
 const StyledTable = styled.table`
 table{
@@ -20,18 +23,26 @@ thead{
   }
 `
 
+
+
 interface TableProps{
-    data:{id:number;title:string;price:number}[] | undefined
+    data: any[] | undefined
+    headers: string[]
+    buttons: {title:string,route:string,cssClass:string}[]
 }
 
-const Table:React.FC <TableProps> = ({data}) =>{
-    return(
-            <StyledTable>
+const Table:React.FC <TableProps> = ({data,headers,buttons}) =>{        
+        return data?
+            (<StyledTable>
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Title</th>
-                        <th>Price</th>
+                        {
+                            headers.map(header=>{
+                                return(
+                                    <th>{header}</th>
+                                )
+                            })
+                        }
                         <th>Operations</th>
                     </tr>
                 </thead>
@@ -40,18 +51,36 @@ const Table:React.FC <TableProps> = ({data}) =>{
                     data?.map(row=>{
                         return(
                            <tr key={row.id}>
-                               <td>{row.id}</td>
-                               <td>{row.title}</td>
-                               <td>{row.price}</td>
-                               <td><Button title="Edit" styleType="primary"/>
-                               <Button title="Delete" styleType="secondary"/></td>
+                               {
+                                 headers.map(key=>{
+                                       return(
+                                       <td>{row[key]}</td>
+                                       )
+                                   })
+                               }
+                               <td>
+                                   {
+                                       buttons.map(btn=>{
+                                           return(
+                                            <Link to={`${btn.route}/${row.id}`}>
+                                               <Button title={btn.title} styleType={btn.cssClass}/>
+                                            </Link>
+                                           )
+                                       })
+                                   }
+                                   
+                                   
+                               </td>
                            </tr>
                         )
                     })
                 }
                 </tbody>
-            </StyledTable>
-    )
-}
+            </StyledTable>)
+            : (<Loading/>)
+        }
+    
+
+
 
 export default Table;

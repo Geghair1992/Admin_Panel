@@ -1,6 +1,7 @@
 import {useState,useEffect} from 'react'
 import Table from '../../components/table/table'
 import styled from 'styled-components'
+import {getProducts} from '../../api/products'
 
 const HeaderTitle = styled.h1`
   display: block;
@@ -11,30 +12,35 @@ const Container = styled.div`
 
 const Index:React.FC = () =>{
     const [products, setProducts] = useState<{id:number;title:string;price:number}[] | undefined>()
+    const headers = ['id','title','price']
+    const buttons = [
+      {
+        title:'Edit',
+        route:'product/edit',
+        cssClass:'primary'
+      },
+      {
+        title:'Delete',
+        route:'product/delete',
+        cssClass:'secondary'
+      },
+      {
+        title:'View',
+        route:'product/view',
+        cssClass:'primary'
+      },
+    ]
 
     useEffect(() => {
-        fetch('https://fakestoreapi.com/products')
-        .then(res=>res.json())
-        .then(result=>setProducts(result))
+         getProducts()
+        .then(result=>{setProducts(result)})
     }, [])
 
     return(
-    //    <ul>
-    //        {
-    //            products?.map((product)=>{
-    //                return(
-    //                    <li key={product.id}>
-    //                        <h3>{product.title}</h3>
-    //                        <h5>{product.price}$</h5>
-    //                    </li>
-    //                )
-    //            })
-    //        }
-    //    </ul>
-    <Container>
-    <HeaderTitle>Products</HeaderTitle>
-    <Table data={products}/>
-    </Container>
+      <Container>
+      <HeaderTitle>Products</HeaderTitle>
+      <Table data={products} headers={headers} buttons={buttons}/>
+      </Container>
     )
 }
 

@@ -1,4 +1,7 @@
 import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux'
+import {logout} from '../../actions/index'
+import { useHistory } from 'react-router-dom'
 
 const StyledHeader = styled.header`
   padding: 20px;
@@ -25,10 +28,23 @@ interface HeaderProps{
 }
 
 const Header: React.FC <HeaderProps> = ({title,name}) =>{
+
+  const logged_in = useSelector((state:any)=>state.logged_in)
+  const dispatch = useDispatch()
+  const history = useHistory()
+
+  const loggout_user = () => {
+    dispatch(logout())
+    history.push('/')
+
+  }
+
     return(
         <StyledHeader>
             <Title>{title}</Title>
-            <Name>{name}</Name>
+            <Name>{logged_in ? name : 'Please Login'}</Name>
+            {logged_in && (<button onClick={loggout_user}>Logout</button>)}      
+               
         </StyledHeader>
     )
 }

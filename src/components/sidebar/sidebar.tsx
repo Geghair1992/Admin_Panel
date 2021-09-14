@@ -48,9 +48,9 @@ const Sidebar: React.FC = () => {
     return(
     <Aside>
         <SidebarList> 
-              {items.map(item=>{
+              {items.map((item,index)=>{
                   return(
-                      <SidebarItem title={item.title} link={item.link} icon={item.icon}  />
+                      <SidebarItem key={index} title={item.title} link={item.link} icon={item.icon}  />
                   )
               })}
         </SidebarList>
